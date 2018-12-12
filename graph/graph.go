@@ -32,10 +32,11 @@ type Edge interface {
 	Weight() float64
 }
 
-type graph struct {
-    nodes []node
-	edges []edge
-	lock  sync.RWMutex
+type DirectedGraph struct {
+nodes 	map[int]Node
+from  	map[int]map[int]Edge
+to    	map[int]map[int]Edge
+lock sync.RWMutex
 }
 
 // это основные методы графа
@@ -73,24 +74,20 @@ type Graph interface {
 	RemoveEdge(e Edge)
 }
 // проверка существует ли такая нода
-func (g *graph) Has(n Node) bool  {
-
-	for _,value:=range g.nodes{
-		if value.id == n.Id(){
-			return true
-		}
+func (g *DirectedGraph) Has(n Node) bool  {
+	if _, ok := g.nodes[n.Id()]; ok {
+		return true
 	}
-
 	return false
 }
 // возвращаем просто все ноды без какого либа разбора-сортировки
-func (g *graph) Nodes() []node{
+func (g *DirectedGraph) Nodes() map[int]Node{
 	return g.nodes
 }
 
 // возвращаем список нод достижимых из заданной ноды
-func (g *graph) From(n Node) []Node{
-	g.lock.RLock()
+func (g *DirectedGraph) From(n Node) []Node{
+/*	g.lock.RLock()
 	defer g.lock.RUnlock()
 	var arrayFromNode []Node
 	for _,value:=range g.edges{
@@ -99,10 +96,13 @@ func (g *graph) From(n Node) []Node{
 		}
 	}
 	return arrayFromNode
+*/
+return nil
 }
+
 // все ноды из которых можно достич указанную
-func (g *graph) To(n Node) []Node{
-	g.lock.RLock()
+func (g *DirectedGraph) To(n Node) []Node{
+/*	g.lock.RLock()
 	defer g.lock.RUnlock()
 	var arrayFromNode []Node
 	for _,value:=range g.edges{
@@ -110,97 +110,75 @@ func (g *graph) To(n Node) []Node{
 			arrayFromNode=append(arrayFromNode,value.from)
 		}
 	}
-	return arrayFromNode
+	return arrayFromNode*/
+	return nil
 }
 // проверка есть ли ребро из u в v
-func (g *graph) HasEdgeFromTo(u, v Node) bool{
-
+func (g *DirectedGraph) HasEdgeFromTo(u, v Node) bool{
+/*
 	for _,value:=range g.edges{
 		if (value.from.Id()==u.Id())&&(value.to.Id()==v.Id()) {
 			return true
 		}
 	}
+*/
 	return false
 }
 // возвращает ребро из u и v, если такое ребро существует, иначе nil
-func (g *graph) Edge(u, v Node) Edge  {
+func (g *DirectedGraph) Edge(u, v Node) Edge  {
 	g.lock.RLock()
 	defer g.lock.RUnlock()
 	return nil
 }
 
 //добавить ноду (без ребер)
-func (g *graph) AddNode(n Node) {
+func (g *DirectedGraph) AddNode(n Node) {
 	g.lock.Lock()
 	//проверим, есть ли нода с таким же идентификатором в графе
 		if g.Has(n){
 			fmt.Println("Вершина с идентификатором '", n.Id(),"' уже существует. Вершина не была добавлена к графу")
 			return
 		}
-	g.nodes=append(g.nodes,node{n.Id(),n.Name()})
+	g.nodes[n.Id()]=n
 	g.lock.Unlock()
 }
 // удалить ноду
-func (g *graph) RemoveNode(n Node) {
+func (g *DirectedGraph) RemoveNode(n Node) {
 	g.lock.Lock()
 	//проверим, есть ли нода с таким же идентификатором в графе
 	if g.Has(n)==false{
 		fmt.Println("Вершина с идентификатором '", n.Id(),"' не существует. Невозможно удалить несуществующую вершину")
 		return
 	}
-
 	//удаляем все рёбра связанные с вершиной
-/*	var arrayFromNode []Node
-	arrayFromNode=g.From(n)
-	for _,value:=range g.edges{
-		if value.from.Id()
-
-
-		g.RemoveEdge(value)
-		}
-*/
-
-
-
-
-
-
 
 	//удаляем вершину
 	var indexDelete int
-	for index,value:=range g.nodes{
-		if value.id == n.Id(){
-			indexDelete=index
+	for _,value:=range g.nodes{
+		if value.Id() == n.Id(){
+			indexDelete=n.Id()
 			break
 		}
 	}
-	g.nodes=append(g.nodes[:indexDelete],g.nodes[indexDelete+1:]...)
-
-
-
-
-
-
-
-
-
+	delete(g.nodes, indexDelete)
 	g.lock.Unlock()
 
 }
 // добавить ребро
-func (g *graph)SetEdge(e Edge)  {
+func (g *DirectedGraph)SetEdge(e Edge)  {
 	g.lock.Lock()
 	if g.HasEdgeFromTo(e.From(),e.To()){
 		fmt.Println("Дуга с началом в вершине '", e.From(),"' до вершины '", e.To(),"' " +
 			"уже существует. Дуга не была добавлена к графу")
 		return
 	}
-	g.edges=append(g.edges,edge{e.From(),e.To(),e.Weight()})
+    g.from[e.From().Id()][e.To().Id()]=e
 	g.lock.Unlock()
+
 }
 // удалить ребро
-func (g *graph) RemoveEdge(e Edge) {
-	g.lock.Lock()
+func (g *DirectedGraph) RemoveEdge(e Edge) {
+/*	g.lock.Lock()
 	if g.HasEdgeFromTo(e.From(),e.To())==false{
 		fmt.Println("Дуга с началом в вершине '", e.From(),"' до вершины '", e.To(),"' " +
 			"не существует. Невозможно удалить несуществующую дугу")
@@ -215,6 +193,7 @@ func (g *graph) RemoveEdge(e Edge) {
 	}
 	g.edges=append(g.edges[:indexDelete],g.edges[indexDelete+1:]...)
 	g.lock.Unlock()
+*/
 }
 
 // Получение значений инкапсулированных полей Ноды
@@ -238,8 +217,13 @@ func (e *edge) Weight() float64 {
 
 
 //создание нового графа
-func NewGraph() Graph{
-	graphObject:=graph{nodes: []node{},edges: []edge{},lock:sync.RWMutex{}}
+func NewGraph() *DirectedGraph{
+	graphObject:=DirectedGraph{
+		map[int]Node{},
+		map[int]map[int]Edge{},
+		map[int]map[int]Edge{},
+		sync.RWMutex{},
+	}
 	return &graphObject
 }
 //создание нового узла
