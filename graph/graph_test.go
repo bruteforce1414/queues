@@ -45,7 +45,6 @@ func TestNewGraph(t *testing.T) {
 	a.Equal(len(testGraph.To(testNode4)),2)
     testGraph.RemoveEdge(testEdge12); t.Log("Список ребёр после удаления ребра 12", testGraph)
 	a.Equal(nil, testGraph.Edge(testNode1, testNode3))
-	a.Equal(true, testGraph.Edge(testNode1, testNode4))
 	t.Log("Проверка наличия пути 24", testGraph.Edge(testNode2, testNode4))
 	t.Log("Список вершин до удаления вершины 3  ", testGraph)
 	//Удаление вершины из списка вершин
@@ -53,5 +52,8 @@ func TestNewGraph(t *testing.T) {
 	t.Log("Список вершин после удаления вершины 3", testGraph)
     //Попытка добавить уже существующую вершину
 	testNode1double:=graph.NewNode(1,"Вершина 1");testGraph.AddNode(testNode1double)
-
+	//Тест на наличие определённых вершин и связей после проведения всех операций"
+	testGraph.Has(testNode0);testGraph.Has(testNode1); testGraph.Has(testNode2);testGraph.Has(testNode4);testGraph.Has(testNode10)
+	testGraph.HasEdgeFromTo(testNode0,testNode1);testGraph.HasEdgeFromTo(testNode0,testNode10);testGraph.HasEdgeFromTo(testNode1,testNode4);
+	testGraph.HasEdgeFromTo(testNode2,testNode1);
 }
