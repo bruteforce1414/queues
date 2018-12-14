@@ -53,7 +53,13 @@ func TestNewGraph(t *testing.T) {
     //Попытка добавить уже существующую вершину
 	testNode1double:=graph.NewNode(1,"Вершина 1");testGraph.AddNode(testNode1double)
 	//Тест на наличие определённых вершин и связей после проведения всех операций"
-	testGraph.Has(testNode0);testGraph.Has(testNode1); testGraph.Has(testNode2);testGraph.Has(testNode4);testGraph.Has(testNode10)
-	testGraph.HasEdgeFromTo(testNode0,testNode1);testGraph.HasEdgeFromTo(testNode0,testNode10);testGraph.HasEdgeFromTo(testNode1,testNode4);
-	testGraph.HasEdgeFromTo(testNode2,testNode1);
+	a.Equal(testGraph.Has(testNode0),true);
+	a.Equal(testGraph.Has(testNode1),true);
+	a.Equal(testGraph.Has(testNode2),true);
+	a.Equal(testGraph.Has(testNode4),true);
+	a.Equal(testGraph.Has(testNode10),true);
+	a.Equal(testGraph.HasEdgeFromTo(testNode0,testNode1),true)
+	a.Equal(testGraph.HasEdgeFromTo(testNode0,testNode10),true)
+	a.Equal(testGraph.HasEdgeFromTo(testNode1,testNode4),true);
+	a.Equal(testGraph.HasEdgeFromTo(testNode2,testNode1),true);
 }
