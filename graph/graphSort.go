@@ -1,5 +1,7 @@
 package graph
 
+
+
 var (
 	VertexsWithoutOutcoming = []Node{}
 	VertexsRanged           = []Node{}
@@ -45,5 +47,5 @@ func GraphSortingTopologicalKan(g *DirectedGraph) [] Node {
 		VertexsWithoutOutcoming=VertexsWithoutOutcoming[1:]
 		}
 	}
-	return VertexsRanged
+	return  VertexsRanged
 }
