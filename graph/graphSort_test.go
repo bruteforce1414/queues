@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 func TestSort(t *testing.T) {
+//	a:=assert.New(t)
 	graphClothes:=graph.NewGraph()
 	underpantsNode1:=graph.NewNode(1,"underpants"); graphClothes.AddNode(underpantsNode1)
 	trousersNode2:=graph.NewNode(2,"trousers"); graphClothes.AddNode(trousersNode2)
@@ -27,7 +28,7 @@ func TestSort(t *testing.T) {
 	trousersNode2_shoesNode8:=graph.NewEdge(trousersNode2,shoesNode8,0);graphClothes.SetEdge(trousersNode2_shoesNode8)
 	socksNode7_shoesNode8:=graph.NewEdge(socksNode7,shoesNode8,0);graphClothes.SetEdge(socksNode7_shoesNode8)
 
-	fmt.Println("Порядок надевания одежды", graphClothes)
+	fmt.Println("Порядок надевания одежды до упорядочивания", graphClothes)
 	graph.GraphSortingTopologicalKan(graphClothes)
 	fmt.Scanln()
 
