@@ -3,10 +3,11 @@ package graph_test
 import (
 	"fmt"
 	"github.com/bruteforce1414/queues/graph"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 func TestSort(t *testing.T) {
-//	a:=assert.New(t)
+	a:=assert.New(t)
 	graphClothes:=graph.NewGraph()
 	underpantsNode1:=graph.NewNode(1,"underpants"); graphClothes.AddNode(underpantsNode1)
 	trousersNode2:=graph.NewNode(2,"trousers"); graphClothes.AddNode(trousersNode2)
@@ -28,8 +29,19 @@ func TestSort(t *testing.T) {
 	trousersNode2_shoesNode8:=graph.NewEdge(trousersNode2,shoesNode8,0);graphClothes.SetEdge(trousersNode2_shoesNode8)
 	socksNode7_shoesNode8:=graph.NewEdge(socksNode7,shoesNode8,0);graphClothes.SetEdge(socksNode7_shoesNode8)
 
-	fmt.Println("Порядок надевания одежды до упорядочивания", graphClothes)
-	graph.GraphSortingTopologicalKan(graphClothes)
+
+	t.Log("Порядок надевания одежды до упорядочивания", graphClothes)
+
+	VertexRanged:=graph.GraphSortingTopologicalKan(graphClothes)
+	for index,_:= range VertexRanged{
+		t.Log(index+1,"-й элемент для надевания", VertexRanged[index].Id()," ", VertexRanged[index].Name())
+	}
 	fmt.Scanln()
+	fmt.Scanln()
+
+	a.Equal(true,VertexRanged)
+
+	
+
 
 }

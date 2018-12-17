@@ -1,19 +1,13 @@
 package graph
 
-import (
-	"fmt"
-)
-
 var (
 	VertexsWithoutOutcoming = []Node{}
 	VertexsRanged           = []Node{}
 	//Значения среза Visited 1-непосещённые, 2 - посещённые, 3 - обработанная
 	Visited = []int{}
-	lastNode Node
-	indexNode int
-)
+	)
 
-func GraphSortingTopologicalKan(g *DirectedGraph) {
+func GraphSortingTopologicalKan(g *DirectedGraph) [] Node {
 
 	for range g.nodes {
 		Visited = append(Visited, 1)
@@ -51,8 +45,5 @@ func GraphSortingTopologicalKan(g *DirectedGraph) {
 		VertexsWithoutOutcoming=VertexsWithoutOutcoming[1:]
 		}
 	}
-	for index, _:= range VertexsRanged{
-	fmt.Println(index+1,"-й элемент для надевания", VertexsRanged[index].Id()," ", VertexsRanged[index].Name())
-	}
-	fmt.Scanln()
+	return VertexsRanged
 }
